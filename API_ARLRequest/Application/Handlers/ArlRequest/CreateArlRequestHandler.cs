@@ -25,11 +25,11 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 await _dbContext.ArlRequests.FirstOrDefaultAsync
                 (a => a.NumeroIdentificacion == request.NumeroIdentificacion);
 
-            if (existingArlRequest != null)
+            /*if (existingArlRequest != null)
             {
                 // validación y lanzar una excepción personalizada si ya existe un registro.
                 throw new Exception("Ya existe un registro con el mismo número de identificación.");
-            }
+            }*/
 
             var urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
             
