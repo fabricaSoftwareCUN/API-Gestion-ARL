@@ -76,10 +76,10 @@ namespace API_ARLRequest.Controllers
                 var arlRequest = await _mediator.Send(command);
                 var action = CreatedAtAction(nameof(GetArlRequestById), new { IdSolicitudArl = arlRequest.IdSolicitudArl }, arlRequest);
 
-                var urls = await _amazonS3.UploadFilesToS3Async(command.Archivos, arlRequest.NumeroIdentificacion);
+                //var urls = await _amazonS3.UploadFilesToS3Async(command.Archivos, arlRequest.NumeroIdentificacion);
 
 
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value, urls });
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value});
             }
             catch (Exception ex)
             {

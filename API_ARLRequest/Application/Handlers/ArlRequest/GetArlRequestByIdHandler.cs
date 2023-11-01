@@ -2,6 +2,7 @@
 using API_ARLRequest.Application.Queries.ArlRequest;
 using API_ARLRequest.Infraestructure.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_ARLRequest.Application.Handlers.ArlRequest
 {
@@ -15,10 +16,14 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
         public async Task<ArlRequestDto> Handle(GetArlRequestByIdQuery request, CancellationToken cancellationToken)
         {
-            var arlRequest = await _dbContext.ArlRequests.FindAsync(
-                new object[] { request.IdSolicitudArl }, cancellationToken);
+            /*var arlRequest = await _dbContext.ArlRequests.FindAsync(
+                new object[] { request.IdSolicitudArl }, cancellationToken);*/
 
-            if(arlRequest != null)
+            var arlRequest = await _dbContext.ArlRequests
+                .Include(a => a.Archivos) // Usamos Include para cargar la relación "Archivos"
+                .FirstOrDefaultAsync(a => a.IdSolicitudArl == request.IdSolicitudArl);
+
+            if (arlRequest != null)
             {
                 return new ArlRequestDto{
                     IdSolicitudArl = arlRequest.IdSolicitudArl,

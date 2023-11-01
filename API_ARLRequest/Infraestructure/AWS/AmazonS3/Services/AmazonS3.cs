@@ -19,13 +19,14 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
         private AWSCredentials credentials;
         private readonly ApplicationDbContext _dbContext;
 
-        public AmazonS3()
+        public AmazonS3(ApplicationDbContext dbContext)
         {
             this._accessKey = "AKIAW7YBK325DVJBMBHI";
             this._secretKey = "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";
             this._config = new AmazonS3Config { RegionEndpoint = RegionEndpoint.USEast1 };
             this._bucketName = "cun-test-arl-request";
             this.credentials = new BasicAWSCredentials(this._accessKey, this._secretKey);
+            this._dbContext = dbContext;
         }
 
         public async Task<List<String>> UploadFilesToS3Async(List<ArlFile> arlFiles, string NumeroIdentificacion)
@@ -62,13 +63,14 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
                     string url = $"https://{_bucketName}.s3.amazonaws.com/{key}";
                     urls.Add(url);
 
+                    /*
                     var arlFile = new ArlFile()
                     {
                         NombreArchivo = file.NombreArchivo,
                         ReferenciaArchivo = url
                     };
 
-                    _dbContext.ArlFiles.Add(arlFile);
+                    _dbContext.ArlFiles.Add(arlFile);*/
                 }
             }
             return urls;

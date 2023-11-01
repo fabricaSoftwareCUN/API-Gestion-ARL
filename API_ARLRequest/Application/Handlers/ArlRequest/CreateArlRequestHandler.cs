@@ -1,18 +1,22 @@
 ﻿using API_ARLRequest.Application.Commands.ArlRequest;
 using API_ARLRequest.Application.DTOs;
 using API_ARLRequest.Domain;
+using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
 using API_ARLRequest.Infraestructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace API_ARLRequest.Application.Handlers.ArlRequest
 {
     public class CreateArlRequestHandler : IRequestHandler<CreateArlRequestCommand, ArlRequestDto>
     {
         private readonly ApplicationDbContext _dbContext;
-        public CreateArlRequestHandler(ApplicationDbContext dbContext)
+        private readonly AmazonS3 _amazonS3;
+        public CreateArlRequestHandler(ApplicationDbContext dbContext, AmazonS3 amazonS3)
         {
             _dbContext = dbContext;
+            _amazonS3 = amazonS3;
         }
 
         public async Task<ArlRequestDto> Handle(CreateArlRequestCommand request, CancellationToken cancellationToken)
@@ -27,6 +31,8 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 throw new Exception("Ya existe un registro con el mismo número de identificación.");
             }
 
+            var urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
+            
             var arlRequest = new Domain.ArlRequest()
             {
                 NumeroIdentificacion = request.NumeroIdentificacion,
@@ -67,11 +73,11 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 Aprobo = request.Aprobo,
                 NombreAprobador = request.NombreAprobador,
                 MotivoAprobacion = request.MotivoAprobacion,
-                /*Archivos = request.Archivos.Select(f => new ArlFile
+                Archivos = request.Archivos.Select((f, i) => new ArlFile
                 {
                     NombreArchivo = f.NombreArchivo,
-                    ReferenciaArchivo = f.ReferenciaArchivo
-                }).ToList()*/
+                    ReferenciaArchivo = urls[i]
+                }).ToList()
             };
 
             _dbContext.ArlRequests.Add(arlRequest);
