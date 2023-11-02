@@ -23,9 +23,10 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
             }
 
             // Actualizar el registro existente con los campos recibidos
-            arlRequest.Aprobo = request.Aprobo;
+            arlRequest.EstadoSolicitud = request.EstadoSolicitud;
             arlRequest.NombreAprobador = request.NombreAprobador;
             arlRequest.MotivoAprobacion = request.MotivoAprobacion;
+            //arlRequest.FechaRespuestaSolicitud = request.FechaRespuestaSolicitud;
 
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -40,16 +41,16 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ModalidadPractica = arlRequest.ModalidadPractica,
                 PeriodoAcademico = arlRequest.PeriodoAcademico,
                 CapaOcho = arlRequest.CapaOcho,
-                DocumentoIdentidadFile = arlRequest.DocumentoIdentidadFile,
+                //DocumentoIdentidadFile = arlRequest.DocumentoIdentidadFile,
                 ProgramaAcademico = arlRequest.ProgramaAcademico,
                 TipoPractica = arlRequest.TipoPractica,
-                RutFile = arlRequest.RutFile,
+                //RutFile = arlRequest.RutFile,
                 NombreEmprendimiento = arlRequest.NombreEmprendimiento,
                 NitEmprendimiento = arlRequest.NitEmprendimiento,
-                CamaraComercioFile = arlRequest.CamaraComercioFile,
+                //CamaraComercioFile = arlRequest.CamaraComercioFile,
                 FechaNacimiento = arlRequest.FechaNacimiento,
                 EpsEstudiante = arlRequest.EpsEstudiante,
-                DocumentoEpsFile = arlRequest.DocumentoEpsFile,
+                //DocumentoEpsFile = arlRequest.DocumentoEpsFile,
                 NumeroTelEstudiante = arlRequest.NumeroTelEstudiante,
                 CorreoInstitucional = arlRequest.CorreoInstitucional,
                 NombreEmpresaPracticas = arlRequest.NombreEmpresaPracticas,
@@ -60,7 +61,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 EmailPersonaACargoPractica = arlRequest.EmailPersonaACargoPractica,
                 FechaInicioPractica = arlRequest.FechaInicioPractica,
                 FechaTerminacionPractica = arlRequest.FechaTerminacionPractica,
-                ActaInicioPractica = arlRequest.ActaInicioPractica,
+                //ActaInicioPractica = arlRequest.ActaInicioPractica,
                 Regional = arlRequest.Regional,
                 Seleccion = arlRequest.Seleccion,
                 JornadaEstablecida = arlRequest.JornadaEstablecida,
@@ -68,9 +69,15 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ZonaResidencial = arlRequest.ZonaResidencial,
                 FechaSolicitud = arlRequest.FechaSolicitud,
                 EstadoSolicitud = arlRequest.EstadoSolicitud,
-                Aprobo = arlRequest.Aprobo,
+                //Aprobo = arlRequest.Aprobo,
                 NombreAprobador = arlRequest.NombreAprobador,
-                MotivoAprobacion = arlRequest.MotivoAprobacion
+                MotivoAprobacion = arlRequest.MotivoAprobacion,
+                Archivos = arlRequest.Archivos.Select(file => new ArlFileDto
+                {
+                    IdDocumentoARL = file.IdDocumentoARL,
+                    NombreArchivo = file.NombreArchivo,
+                    ReferenciaArchivo = file.ReferenciaArchivo
+                }).ToList()
             };
         }
     }

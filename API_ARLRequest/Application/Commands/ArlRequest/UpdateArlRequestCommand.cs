@@ -7,7 +7,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
     public record UpdateArlRequestCommand
         (
         int IdSolicitudArl,
-        string Aprobo,
+        string EstadoSolicitud,
         string NombreAprobador,
         string MotivoAprobacion
         )
