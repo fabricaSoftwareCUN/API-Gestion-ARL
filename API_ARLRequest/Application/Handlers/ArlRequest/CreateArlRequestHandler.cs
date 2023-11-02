@@ -48,7 +48,6 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 NitEmprendimiento = request.NitEmprendimiento,
                 FechaNacimiento = request.FechaNacimiento,
                 EpsEstudiante = request.EpsEstudiante,
-                //DocumentoEpsFile = request.DocumentoEpsFile,
                 NumeroTelEstudiante = request.NumeroTelEstudiante,
                 CorreoInstitucional = request.CorreoInstitucional,
                 NombreEmpresaPracticas = request.NombreEmpresaPracticas,
