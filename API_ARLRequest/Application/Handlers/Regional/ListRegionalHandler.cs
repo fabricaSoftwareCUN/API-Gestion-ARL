@@ -3,6 +3,7 @@ using API_ARLRequest.Application.Queries.ArlRequest;
 using API_ARLRequest.Application.Queries.Regional;
 using API_ARLRequest.Infraestructure.Data;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace API_ARLRequest.Application.Handlers.Regional
 {
@@ -16,13 +17,18 @@ namespace API_ARLRequest.Application.Handlers.Regional
 
         public async Task<IEnumerable<RegionalDto>> Handle(ListRegionalesQuery request, CancellationToken cancellationToken)
         {
-            var regionales = _dbContext.Regionales
-                .Where(r => r.Municipio.Contains(request.Filtro)).ToList();
+            /*var regionales = _dbContext.Regionales
+                .Where(r => r.Municipio.Contains(request.Filtro)).ToList();*/
 
-            return regionales.Select(regional => new RegionalDto
-            {
-                Municipio = regional.Municipio
-            });
+            var regionales = await _dbContext.Regionales
+                .Where(r => r.Municipio.Contains(request.Filtro))
+                .Select(regional => new RegionalDto
+                {
+                    Municipio = regional.Municipio
+                })
+                .ToListAsync(cancellationToken);
+
+            return regionales;
         }
     }
 }
