@@ -14,6 +14,7 @@ namespace API_ARLRequest.Infraestructure.Data
         // DbSet para cada entidad
         public DbSet<ArlRequest> ArlRequests { get; set; }
         public DbSet<ArlFile> ArlFiles { get; set; }
+        public DbSet<Regional> Regionales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -18,7 +18,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Coliseo")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Jungla")));
 
 
 builder.Services.AddTransient<AmazonS3>();
