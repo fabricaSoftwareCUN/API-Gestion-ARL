@@ -9,13 +9,16 @@ namespace API_ARLRequest.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdDocumentoARL { get; set; }
-        public string NombreArchivo { get; set; }
-        public string ReferenciaArchivo { get; set; }
+        public string? NombreArchivo { get; set; }
+        public string? ReferenciaArchivo { get; set; }
 
         // Clave externa (FK) para relacionar archivos con estudiantes
-        [JsonIgnore]
+        //[ForeignKey("IdSolicitudArl")]
+        public ArlRequest? arlRequest { get; set; }
         public int IdSolicitudArl { get; set; }
-        [JsonIgnore]
-        public ArlRequest arlRequest { get; set; }
+
+        //[JsonIgnore]
+        //public ArlRequest? arlRequest { get; set; }
+        
     }
 }

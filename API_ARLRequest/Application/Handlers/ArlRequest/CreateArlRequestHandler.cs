@@ -31,7 +31,13 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 throw new Exception("Ya existe un registro con el mismo número de identificación.");
             }*/
 
-            var urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
+            var urls = new List<string>();
+
+            if(request.Archivos != null || request.Archivos.Count > 0)
+            {
+                urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
+            }
+            
 
             DateTime dateTime = DateTime.Now;
             var fechaFormateada = dateTime.ToString();
