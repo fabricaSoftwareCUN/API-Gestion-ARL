@@ -35,42 +35,31 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
             using var client = new AmazonS3Client(this.credentials, this._config);
 
-            if (arlFiles == null || arlFiles.Count == 0)
+            
+            if (arlFiles != null && arlFiles.Count > 0)
             {
-                throw new Exception("Los archivos son obligatorios.");
-                //return new string[0];
-            }
-
-            foreach (var file in arlFiles)
-            {
-                byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
-
-                using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
+                foreach (var file in arlFiles)
                 {
-                    var fileTransferUtility = new TransferUtility(client);
+                    byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
 
-                    var key = NumeroIdentificacion + "/" + file.NombreArchivo + ".pdf";
-
-                    var fileTransferUtilityRequest = new TransferUtilityUploadRequest
+                    using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
                     {
-                        BucketName = _bucketName,
-                        InputStream = pdfStream,
-                        Key = key
-                    };
+                        var fileTransferUtility = new TransferUtility(client);
 
-                    await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
+                        var key = NumeroIdentificacion + "/" + file.NombreArchivo + ".pdf";
 
-                    string url = $"https://{_bucketName}.s3.amazonaws.com/{key}";
-                    urls.Add(url);
+                        var fileTransferUtilityRequest = new TransferUtilityUploadRequest
+                        {
+                            BucketName = _bucketName,
+                            InputStream = pdfStream,
+                            Key = key
+                        };
 
-                    /*
-                    var arlFile = new ArlFile()
-                    {
-                        NombreArchivo = file.NombreArchivo,
-                        ReferenciaArchivo = url
-                    };
+                        await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
 
-                    _dbContext.ArlFiles.Add(arlFile);*/
+                        string url = $"https://{_bucketName}.s3.amazonaws.com/{key}";
+                        urls.Add(url);
+                    }
                 }
             }
             return urls;

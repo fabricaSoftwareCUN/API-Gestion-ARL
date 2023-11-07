@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace API_ARLRequest.Domain
 {
@@ -12,7 +13,9 @@ namespace API_ARLRequest.Domain
         public string ReferenciaArchivo { get; set; }
 
         // Clave externa (FK) para relacionar archivos con estudiantes
+        [JsonIgnore]
         public int IdSolicitudArl { get; set; }
+        [JsonIgnore]
         public ArlRequest arlRequest { get; set; }
     }
 }

@@ -88,7 +88,7 @@ namespace API_ARLRequest.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Status = true, Code = HttpStatusCode.BadRequest, Message = ex.Message });
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message });
             }
 
             

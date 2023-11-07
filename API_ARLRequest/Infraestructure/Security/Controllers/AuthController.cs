@@ -37,7 +37,7 @@ namespace API_ARLRequest.Infraestructure.Security.Controllers
 
             string jwtToken = GenerateToken(user);
 
-            return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "Autenticado correctamente.", token = jwtToken });
+            return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "Autenticado correctamente.", Email = user.Email, Rol = user.Rol, token = jwtToken });
         }
 
         private string GenerateToken(User user)

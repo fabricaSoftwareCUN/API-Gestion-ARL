@@ -60,6 +60,6 @@ namespace API_ARLRequest.Domain
         public string? MotivoAprobacion { get; set; }
         //public string? FechaRespuestaSolicitud { get; set; }
 
-        public List<ArlFile> Archivos { get; set; } = new List<ArlFile>();
+        public List<ArlFile>? Archivos { get; set; } = new List<ArlFile>();
     }
 }
