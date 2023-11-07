@@ -57,7 +57,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ZonaResidencial = arlRequest.ZonaResidencial,
                 FechaSolicitud = arlRequest.FechaSolicitud,
                 EstadoSolicitud = arlRequest.EstadoSolicitud,
-                //Aprobo = arlRequest.Aprobo,
+                Aprobo = arlRequest.Aprobo,
                 NombreAprobador = arlRequest.NombreAprobador,
                 MotivoAprobacion = arlRequest.MotivoAprobacion,
                 Archivos = arlRequest.Archivos.Select(file => new ArlFileDto

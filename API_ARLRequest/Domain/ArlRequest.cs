@@ -55,12 +55,12 @@ namespace API_ARLRequest.Domain
         public string? ZonaResidencial { get; set; }
         public string? FechaSolicitud { get; set; }
         public string? EstadoSolicitud { get; set; }
-        //public string? Aprobo { get; set; }
+        public string? Aprobo { get; set; }
         public string? NombreAprobador { get; set; }
         public string? MotivoAprobacion { get; set; }
-        //public string? FechaRespuestaSolicitud { get; set; }
+        public string? FechaRespuestaSolicitud { get; set; }
 
-        //public List<ArlFile>? Archivos { get; set; } = new List<ArlFile>();
-        public List<ArlFile>? Archivos { get; set; }
+        public List<ArlFile>? Archivos { get; set; } = new List<ArlFile>();
+        //public List<ArlFile>? Archivos { get; set; }
     }
 }

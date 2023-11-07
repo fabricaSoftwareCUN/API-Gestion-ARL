@@ -14,7 +14,9 @@ namespace API_ARLRequest.Domain
 
         // Clave externa (FK) para relacionar archivos con estudiantes
         //[ForeignKey("IdSolicitudArl")]
+        [JsonIgnore]
         public ArlRequest? arlRequest { get; set; }
+        [ForeignKey("arlRequest")]
         public int IdSolicitudArl { get; set; }
 
         //[JsonIgnore]
