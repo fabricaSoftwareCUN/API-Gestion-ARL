@@ -37,7 +37,7 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
             if (arlFiles == null || arlFiles.Count == 0)
             {
-                //throw new Exception("No se ha subido ningun archivo.");
+                throw new Exception("Los archivos son obligatorios.");
                 //return new string[0];
             }
 
