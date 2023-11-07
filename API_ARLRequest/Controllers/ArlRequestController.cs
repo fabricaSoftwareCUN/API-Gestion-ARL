@@ -4,6 +4,7 @@ using API_ARLRequest.Application.Queries.ArlRequest;
 using API_ARLRequest.Domain;
 using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Matching;
@@ -13,6 +14,7 @@ using System.Net;
 
 namespace API_ARLRequest.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ArlRequestController : ControllerBase
@@ -28,6 +30,7 @@ namespace API_ARLRequest.Controllers
 
         #region GetCommands
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllArlRequests()
         {
@@ -41,6 +44,7 @@ namespace API_ARLRequest.Controllers
 
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet("Id/{IdSolicitudArl}")]
         public async Task<IActionResult> GetArlRequestById(int IdSolicitudArl)
         {
@@ -53,6 +57,7 @@ namespace API_ARLRequest.Controllers
             return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequest });
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("Dni/{NumeroIdentificacion}")]
         public async Task<IActionResult> GetArlRequestByDni(string NumeroIdentificacion)
         {

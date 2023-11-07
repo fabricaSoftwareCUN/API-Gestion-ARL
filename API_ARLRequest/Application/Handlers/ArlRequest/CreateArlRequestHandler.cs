@@ -32,7 +32,10 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
             }*/
 
             var urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
-            
+
+            DateTime dateTime = DateTime.Now;
+            var fechaFormateada = dateTime.ToString();
+
             var arlRequest = new Domain.ArlRequest()
             {
                 NumeroIdentificacion = request.NumeroIdentificacion,
@@ -63,7 +66,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 JornadaEstablecida = request.JornadaEstablecida,
                 ModoPractica = request.ModoPractica,
                 ZonaResidencial = request.ZonaResidencial,
-                FechaSolicitud = request.FechaSolicitud,
+                FechaSolicitud = fechaFormateada,
                 EstadoSolicitud = request.EstadoSolicitud,
                 NombreAprobador = request.NombreAprobador,
                 MotivoAprobacion = request.MotivoAprobacion,
@@ -113,6 +116,10 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 JornadaEstablecida = arlRequest.JornadaEstablecida,
                 ModoPractica = arlRequest.ModoPractica,
                 //Aprobo = arlRequest.Aprobo,
+                ZonaResidencial = arlRequest.ZonaResidencial,
+                FechaSolicitud = arlRequest.FechaSolicitud,
+                EstadoSolicitud = arlRequest.EstadoSolicitud,
+                NombreAprobador = arlRequest.NombreAprobador,
                 MotivoAprobacion = arlRequest.MotivoAprobacion,
                 Archivos = arlRequest.Archivos.Select(file => new ArlFileDto
                 {
