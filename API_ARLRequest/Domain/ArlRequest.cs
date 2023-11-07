@@ -12,18 +12,18 @@ namespace API_ARLRequest.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdSolicitudArl { get; set; }
-        [Required]
-        [StringLength(50)]
+        //[Required]
+        //[StringLength(50)]
         public string NumeroIdentificacion { get; set;}
-        [Required]
-        [StringLength(50)]
+        //[Required]
+        //[StringLength(50)]
         public string TipoIdentificacion { get; set; }
-        [Required]
-        [StringLength(150)]
+        //[Required]
+        //[StringLength(150)]
         public string NombreEstudiante { get; set; }
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        public string? EmailEstudiante { get; set; }
+        //[Required]
+        //[DataType(DataType.EmailAddress)]
+        public string EmailEstudiante { get; set; }
         public string? ModalidadPractica { get; set; }
         public string? PeriodoAcademico { get; set; }
         public string? CapaOcho { get; set; }

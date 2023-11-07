@@ -30,7 +30,7 @@ namespace API_ARLRequest.Controllers
 
         #region GetCommands
 
-        [Authorize]
+        
         [HttpGet]
         public async Task<IActionResult> GetAllArlRequests()
         {
