@@ -44,7 +44,7 @@ namespace API_ARLRequest.Controllers
 
         }
 
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         [HttpGet("Id/{IdSolicitudArl}")]
         public async Task<IActionResult> GetArlRequestById(int IdSolicitudArl)
         {
@@ -57,7 +57,7 @@ namespace API_ARLRequest.Controllers
             return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequest });
         }
 
-        [Authorize(Roles = "Admin, User")]
+        //[Authorize(Roles = "Admin, User")]
         [HttpGet("Dni/{NumeroIdentificacion}")]
         public async Task<IActionResult> GetArlRequestByDni(string NumeroIdentificacion)
         {

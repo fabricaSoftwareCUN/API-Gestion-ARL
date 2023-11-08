@@ -17,7 +17,9 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
         public async Task<IEnumerable<ArlRequestDto>> Handle(ListArlRequestsQuery request, CancellationToken cancellationToken)
         {
-            var arlRequests = await _dbContext.ArlRequests.ToListAsync(cancellationToken);
+            var arlRequests = await _dbContext.ArlRequests
+                .Include(a => a.Archivos) // Usamos Include para cargar la relación "Archivos"
+                .ToListAsync(cancellationToken);
 
             return arlRequests.Select(arlRequest => new ArlRequestDto
             {

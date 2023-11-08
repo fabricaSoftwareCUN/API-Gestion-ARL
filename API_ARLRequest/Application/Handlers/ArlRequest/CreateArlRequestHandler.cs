@@ -73,7 +73,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ModoPractica = request.ModoPractica,
                 ZonaResidencial = request.ZonaResidencial,
                 FechaSolicitud = fechaFormateada,
-                EstadoSolicitud = request.EstadoSolicitud,
+                EstadoSolicitud = "Pendiente",
                 NombreAprobador = request.NombreAprobador,
                 MotivoAprobacion = request.MotivoAprobacion,
                 Archivos = request.Archivos.Select((f, i) => new ArlFile
