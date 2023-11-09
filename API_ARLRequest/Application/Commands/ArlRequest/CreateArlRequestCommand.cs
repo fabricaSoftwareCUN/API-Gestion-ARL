@@ -12,7 +12,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string EmailEstudiante,
         string ModalidadPractica,
         string PeriodoAcademico,
-        string CapaOcho,
+        bool CapaOcho,
         string ProgramaAcademico,
         string TipoPractica,
         string NombreEmprendimiento,
@@ -39,6 +39,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string Aprobo,
         string NombreAprobador,
         string MotivoAprobacion,
+        string FechaRespuestaSolicitud,
         List<ArlFile> Archivos
         )
         : IRequest<ArlRequestDto>;

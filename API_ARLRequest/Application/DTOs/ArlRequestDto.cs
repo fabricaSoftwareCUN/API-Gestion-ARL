@@ -13,7 +13,7 @@ namespace API_ARLRequest.Application.DTOs
         public string ModalidadPractica { get; set; }
         public string PeriodoAcademico { get; set; }
         [JsonPropertyName("CapaOcho")]
-        public string CapaOcho { get; set; }
+        public bool CapaOcho { get; set; }
         //public string DocumentoIdentidadFile { get; set; }
         public string ProgramaAcademico { get; set; }
         public string TipoPractica { get; set; }

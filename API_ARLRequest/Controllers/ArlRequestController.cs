@@ -73,7 +73,7 @@ namespace API_ARLRequest.Controllers
 
         #region PostCommands
         [HttpPost]
-        public async Task<IActionResult> CreateArlRequest(CreateArlRequestCommand command)
+        public async Task<IActionResult> CreateArlRequest([FromBody] CreateArlRequestCommand command)
         {
 
             try
@@ -84,14 +84,24 @@ namespace API_ARLRequest.Controllers
                 //var urls = await _amazonS3.UploadFilesToS3Async(command.Archivos, arlRequest.NumeroIdentificacion);
 
 
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value});
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message });
+            }
+            catch (NotSupportedException ex)
+            {
+                // Manejo de excepción de serialización JSON
+                //Console.WriteLine("Error de serialización JSON: " + ex.Message);
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message, Response = "Error de Serializacion?" });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex });
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message, Response = "Error al recibir los datos." });
             }
 
-            
+
         }
 
         #endregion

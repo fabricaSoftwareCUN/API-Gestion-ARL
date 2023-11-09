@@ -26,7 +26,7 @@ namespace API_ARLRequest.Domain
         public string? EmailEstudiante { get; set; }
         public string? ModalidadPractica { get; set; }
         public string? PeriodoAcademico { get; set; }
-        public string? CapaOcho { get; set; }
+        public bool CapaOcho { get; set; }
         //public string? DocumentoIdentidadFile { get; set; }
         public string? ProgramaAcademico { get; set; }
         public string? TipoPractica { get; set; }

@@ -21,23 +21,22 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
         public async Task<ArlRequestDto> Handle(CreateArlRequestCommand request, CancellationToken cancellationToken)
         {
-            var existingArlRequest = 
-                await _dbContext.ArlRequests.FirstOrDefaultAsync
-                (a => a.NumeroIdentificacion == request.NumeroIdentificacion);
+            var existingPendingRequest = await _dbContext.ArlRequests
+                .FirstOrDefaultAsync(a => a.NumeroIdentificacion == request.NumeroIdentificacion && a.EstadoSolicitud == "Pendiente");
 
-            /*if (existingArlRequest != null)
+            if (existingPendingRequest != null)
             {
-                // validación y lanzar una excepción personalizada si ya existe un registro.
-                throw new Exception("Ya existe un registro con el mismo número de identificación.");
-            }*/
+                // Ya existe una solicitud pendiente, lanzar una excepción o devolver un mensaje de error.
+                throw new InvalidOperationException("Ya existe una solicitud pendiente con el mismo número de identificación.");
+            }
 
             var urls = new List<string>();
 
-            if(request.Archivos != null || request.Archivos.Count > 0)
+            if (request.Archivos != null && request.Archivos.Count > 0)
             {
                 urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
             }
-            
+
 
             DateTime dateTime = DateTime.Now;
             var fechaFormateada = dateTime.ToString();
@@ -76,6 +75,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 EstadoSolicitud = "Pendiente",
                 NombreAprobador = request.NombreAprobador,
                 MotivoAprobacion = request.MotivoAprobacion,
+                FechaRespuestaSolicitud = request.FechaRespuestaSolicitud,
                 Archivos = request.Archivos.Select((f, i) => new ArlFile
                 {
                     NombreArchivo = f.NombreArchivo,
@@ -127,6 +127,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 EstadoSolicitud = arlRequest.EstadoSolicitud,
                 NombreAprobador = arlRequest.NombreAprobador,
                 MotivoAprobacion = arlRequest.MotivoAprobacion,
+                FechaRespuestaSolicitud = arlRequest.FechaRespuestaSolicitud,
                 Archivos = arlRequest.Archivos.Select(file => new ArlFileDto
                 {
                     IdDocumentoARL = file.IdDocumentoARL,

@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Grados33")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Coliseo")));
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddTransient<AmazonS3>();

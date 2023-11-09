@@ -33,36 +33,86 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
         {
             List<string> urls = new List<string>();
 
-            using var client = new AmazonS3Client(this.credentials, this._config);
 
-            
-            if (arlFiles != null && arlFiles.Count > 0)
+            if (arlFiles == null || arlFiles.Count == 0)
             {
+                return urls; // No hay archivos para subir.
+            }
+
+            try
+            {
+                using var client = new AmazonS3Client(this.credentials, this._config);
+
                 foreach (var file in arlFiles)
                 {
+                    // Validación de Base64
+                    if (!IsBase64String(file.ReferenciaArchivo))
+                    {
+                        // Manejo de archivos no válidos
+                        //Log.Warning($"Archivo no válido: {file.NombreArchivo}");
+                        urls.Add("null");
+                        continue; // Salta este archivo y continúa con el siguiente.
+                    }
+
+                    // Decodificar el archivo Base64
                     byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
 
-                    using (MemoryStream pdfStream = new MemoryStream(pdfBytes))
-                    {
-                        var fileTransferUtility = new TransferUtility(client);
+                    // Subir el archivo a Amazon S3
+                    string key = $"{NumeroIdentificacion}/{file.NombreArchivo}.pdf";
+                    string url = await UploadFileToS3Async(client, pdfBytes, key);
 
-                        var key = NumeroIdentificacion + "/" + file.NombreArchivo + ".pdf";
-
-                        var fileTransferUtilityRequest = new TransferUtilityUploadRequest
-                        {
-                            BucketName = _bucketName,
-                            InputStream = pdfStream,
-                            Key = key
-                        };
-
-                        await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
-
-                        string url = $"https://{_bucketName}.s3.amazonaws.com/{key}";
-                        urls.Add(url);
-                    }
+                    urls.Add(url);
                 }
             }
+            catch (Exception ex)
+            {
+                // Manejo de errores: Registra o maneja la excepción según tus necesidades.
+                // También puedes agregar métricas o notificaciones aquí para monitorizar problemas.
+                //Log.Error(ex, "Error al subir archivos a Amazon S3");
+                throw new("Ha ocurrido un error inesperado: " + ex.Message); // Re-lanza la excepción si es necesario.
+            }
+
             return urls;
+        }
+
+        private async Task<string> UploadFileToS3Async(IAmazonS3 client, byte[] fileData, string key)
+        {
+            using (MemoryStream memoryStream = new MemoryStream(fileData))
+            {
+                var fileTransferUtility = new TransferUtility(client);
+
+                var fileTransferUtilityRequest = new TransferUtilityUploadRequest
+                {
+                    BucketName = _bucketName,
+                    InputStream = memoryStream,
+                    Key = key
+                };
+
+                await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
+
+                return $"https://{_bucketName}.s3.amazonaws.com/{key}";
+            }
+        }
+
+        private bool IsBase64String(string s)
+        {
+            // Validación simple para verificar si una cadena es Base64 válida
+            if (string.IsNullOrWhiteSpace(s) || s.Length % 4 != 0)
+            {
+                return false;
+            }
+            try
+            {
+                Convert.FromBase64String(s);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+
+
         }
 
 
