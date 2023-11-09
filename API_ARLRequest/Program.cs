@@ -26,6 +26,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Grados33")));
 
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ArlUserService>();
 builder.Services.AddTransient<AmazonS3>();
 
 // Configurar JWT
