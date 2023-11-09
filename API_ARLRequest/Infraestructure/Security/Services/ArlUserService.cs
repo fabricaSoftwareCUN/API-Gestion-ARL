@@ -1,6 +1,7 @@
 ﻿using API_ARLRequest.Infraestructure.Data;
 using API_ARLRequest.Infraestructure.Security.DTOs;
 using API_ARLRequest.Infraestructure.Security.Models;
+using Azure.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace API_ARLRequest.Infraestructure.Security.Services
@@ -49,8 +50,15 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
         public async Task<UserDTO> CreateUserAsync(UserDTO userDTO)
         {
-            //var existingPendingRequest = await _context.ArlRequests
+            var existingUser = await _context.Users
+                .FirstOrDefaultAsync(user => user.Email == userDTO.Email);
             //.FirstOrDefaultAsync(a => a.NumeroIdentificacion == request.NumeroIdentificacion && a.EstadoSolicitud == "Pendiente");
+
+            if (existingUser != null)
+            {
+                // Ya existe una solicitud pendiente, lanzar una excepción o devolver un mensaje de error.
+                throw new InvalidOperationException("Ya existe un usuario con el mismo Email.");
+            }
 
 
             // TODO: AGREGAR VALIDACIONES Y COMPLETAR CRUD 
