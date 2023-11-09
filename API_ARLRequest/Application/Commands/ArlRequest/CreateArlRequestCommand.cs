@@ -12,7 +12,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string EmailEstudiante,
         string ModalidadPractica,
         string PeriodoAcademico,
-        string CapaOcho,
+        bool CapaOcho,
         string ProgramaAcademico,
         string TipoPractica,
         string NombreEmprendimiento,

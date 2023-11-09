@@ -113,12 +113,12 @@ namespace API_ARLRequest.Controllers
         {
             try
             {
-                var arlRequest = await _mediator.Send(command);
-                if (arlRequest == null)
+                var arlRequests = await _mediator.Send(command);
+                if (arlRequests == null)
                 {
                     return NotFound(new { Status = false, Code = HttpStatusCode.NotFound, Messagge = $"No se encontró ninguna solicitud de ARL con ID {command.IdSolicitudArl}." });
                 }
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequest });
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequests });
             }
             catch (Exception ex)
             {

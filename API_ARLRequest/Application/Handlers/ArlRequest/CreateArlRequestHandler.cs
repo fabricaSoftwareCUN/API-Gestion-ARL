@@ -49,7 +49,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 EmailEstudiante = request.EmailEstudiante,
                 ModalidadPractica = request.ModalidadPractica,
                 PeriodoAcademico = request.PeriodoAcademico,
-                CapaOcho = request.CapaOcho,
+                CapaOcho = request.CapaOcho.ToString(),
                 ProgramaAcademico = request.ProgramaAcademico,
                 TipoPractica = request.TipoPractica,
                 NombreEmprendimiento = request.NombreEmprendimiento,
