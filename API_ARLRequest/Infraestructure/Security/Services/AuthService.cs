@@ -13,10 +13,10 @@ namespace API_ARLRequest.Infraestructure.Security.Services
             _context = context;
         }
 
-        public async Task<User?> GetUser(UserDTO userDTO)
+        public async Task<User?> GetUser(LoginUserDTO loginUserDTO)
         {
             return await _context.Users
-                .SingleOrDefaultAsync(user => user.Email == userDTO.Email);
+                .SingleOrDefaultAsync(user => user.Email == loginUserDTO.Email);
         }
 
 

@@ -61,9 +61,9 @@ namespace API_ARLRequest.Infraestructure.Security.Controllers
             try
             {
                 var createdUser = await _arlUserService.CreateUserAsync(userDTO);
-                var action = CreatedAtAction(nameof(GetUser), new { IdUser = createdUser.IdUser }, createdUser);
+                //var action = CreatedAtAction(nameof(GetUser), new { IdUser = createdUser.IdUser }, createdUser);
 
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, User = action.Value });
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "Usuario creado exitosamente.." });
             }
             catch (Exception ex)
             {

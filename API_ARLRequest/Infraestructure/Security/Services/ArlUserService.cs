@@ -23,7 +23,6 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
             var userDTO = new UserDTO
             {
-                IdUser = user.IdUser,
                 Email = user.Email,
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
@@ -40,7 +39,6 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
             var userDTOs = users.Select(user => new UserDTO
             {
-                IdUser = user.IdUser,
                 Email = user.Email,
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
@@ -71,7 +69,6 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
             return new UserDTO
             {
-                IdUser = newUser.IdUser,
                 Email = newUser.Email,
                 Nombre = newUser.Nombre,
                 Apellido = newUser.Apellido,
@@ -96,7 +93,6 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
             return new UserDTO
             {
-                IdUser = user.IdUser,
                 Email = user.Email,
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,

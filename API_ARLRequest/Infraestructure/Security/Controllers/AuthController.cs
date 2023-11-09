@@ -26,9 +26,9 @@ namespace API_ARLRequest.Infraestructure.Security.Controllers
 
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDTO userDTO)
+        public async Task<IActionResult> Login(LoginUserDTO loginUserDTO)
         {
-            var user = await _authService.GetUser(userDTO);
+            var user = await _authService.GetUser(loginUserDTO);
 
             if (user == null)
             {
