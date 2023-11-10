@@ -24,6 +24,7 @@ namespace API_ARLRequest.Application.Handlers.Regional
                 .Where(r => r.Municipio.Contains(request.Filtro))
                 .Select(regional => new RegionalDto
                 {
+                    IdRegional = regional.IdRegional,
                     Municipio = regional.Municipio
                 })
                 .ToListAsync(cancellationToken);

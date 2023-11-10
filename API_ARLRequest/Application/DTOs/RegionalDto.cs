@@ -2,7 +2,7 @@
 {
     public class RegionalDto
     {
-        //public int IdRegional { get; set; }
+        public int IdRegional { get; set; }
         public string Municipio { get; set; }
     }
 }
