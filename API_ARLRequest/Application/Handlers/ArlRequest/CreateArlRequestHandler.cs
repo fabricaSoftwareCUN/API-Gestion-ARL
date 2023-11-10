@@ -72,7 +72,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ModoPractica = request.ModoPractica,
                 ZonaResidencial = request.ZonaResidencial,
                 FechaSolicitud = fechaFormateada,
-                EstadoSolicitud = "Pendiente",
+                EstadoSolicitud = "PENDIENTE",
                 NombreAprobador = request.NombreAprobador,
                 MotivoAprobacion = request.MotivoAprobacion,
                 FechaRespuestaSolicitud = request.FechaRespuestaSolicitud,
