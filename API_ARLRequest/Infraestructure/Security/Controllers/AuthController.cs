@@ -54,7 +54,7 @@ namespace API_ARLRequest.Infraestructure.Security.Controllers
 
             var securityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(12),
                 signingCredentials: credentials
                 );
 

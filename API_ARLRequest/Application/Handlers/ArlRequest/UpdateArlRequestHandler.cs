@@ -19,14 +19,17 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
             if (arlRequest == null)
             {
-                return null;
+                throw new InvalidOperationException("No es una solicitud valida para resolver.");
             }
+
+            DateTime dateTime = DateTime.Now;
+            var fechaFormateada = dateTime.ToString();
 
             // Actualizar el registro existente con los campos recibidos
             arlRequest.EstadoSolicitud = request.EstadoSolicitud;
             arlRequest.NombreAprobador = request.NombreAprobador;
             arlRequest.MotivoAprobacion = request.MotivoAprobacion;
-            //arlRequest.FechaRespuestaSolicitud = request.FechaRespuestaSolicitud;
+            arlRequest.FechaRespuestaSolicitud = fechaFormateada;
 
 
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -72,6 +75,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 //Aprobo = arlRequest.Aprobo,
                 NombreAprobador = arlRequest.NombreAprobador,
                 MotivoAprobacion = arlRequest.MotivoAprobacion,
+                FechaRespuestaSolicitud = arlRequest.FechaRespuestaSolicitud,
                 Archivos = arlRequest.Archivos.Select(file => new ArlFileDto
                 {
                     IdDocumentoARL = file.IdDocumentoARL,
