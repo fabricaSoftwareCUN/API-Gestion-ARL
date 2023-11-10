@@ -17,9 +17,18 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
             var arlRequest = await _dbContext.ArlRequests.FindAsync(
                 new object[] { request.IdSolicitudArl }, cancellationToken);
 
+            // VALIDACIONES
             if (arlRequest == null)
             {
                 throw new InvalidOperationException("No es una solicitud valida para resolver.");
+            }
+            if (arlRequest.EstadoSolicitud != "Pendiente")
+            {
+                throw new InvalidOperationException("La solicitud ya ha sido resuelta, no es posible modificar su estado.");
+            }
+            if (arlRequest.EstadoSolicitud == "Pendiente")
+            {
+                throw new InvalidOperationException("Debes cambiar el estado de solicitud a RECHAZADA o APROBADA.");
             }
 
             DateTime dateTime = DateTime.Now;
