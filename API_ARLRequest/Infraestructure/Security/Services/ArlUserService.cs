@@ -23,7 +23,7 @@ namespace API_ARLRequest.Infraestructure.Security.Services
             }
 
             var userDTO = new UserDTO
-            {
+            {                
                 Email = user.Email,
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
@@ -40,6 +40,7 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
             var userDTOs = users.Select(user => new UserDTO
             {
+                IdUser = user.IdUser,
                 Email = user.Email,
                 Nombre = user.Nombre,
                 Apellido = user.Apellido,
@@ -54,14 +55,13 @@ namespace API_ARLRequest.Infraestructure.Security.Services
                 .FirstOrDefaultAsync(user => user.Email == userDTO.Email);
             //.FirstOrDefaultAsync(a => a.NumeroIdentificacion == request.NumeroIdentificacion && a.EstadoSolicitud == "Pendiente");
 
+
+            // VALIDACIONES
             if (existingUser != null)
             {
                 // Ya existe una solicitud pendiente, lanzar una excepción o devolver un mensaje de error.
                 throw new InvalidOperationException("Ya existe un usuario con el mismo Email.");
             }
-
-
-            // TODO: AGREGAR VALIDACIONES Y COMPLETAR CRUD 
 
             var newUser = new User
             {
