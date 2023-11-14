@@ -22,13 +22,9 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
             {
                 throw new InvalidOperationException("No es una solicitud valida para resolver.");
             }
-            if (arlRequest.EstadoSolicitud == "APROBADA" || arlRequest.EstadoSolicitud == "RECHAZADA")
+            /*if (arlRequest.EstadoSolicitud == "APROBADA" || arlRequest.EstadoSolicitud == "RECHAZADA")
             {
                 throw new InvalidOperationException("La solicitud ya ha sido resuelta, no es posible modificar su estado.");
-            }
-            /*if (arlRequest.EstadoSolicitud == "PENDIENTE")
-            {
-                throw new InvalidOperationException("Debes cambiar el estado de solicitud a RECHAZADA o APROBADA.");
             }*/
 
             DateTime dateTime = DateTime.Now;
