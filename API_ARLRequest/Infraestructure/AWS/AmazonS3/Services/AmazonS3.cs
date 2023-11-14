@@ -46,12 +46,25 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
                 foreach (var file in arlFiles)
                 {
-                    if(string.IsNullOrWhiteSpace(file.ReferenciaArchivo))
+                    string base64String = file.ReferenciaArchivo;
+                    string base64Prefix = "data:application/pdf;base64,";
+                    string base64Data = string.Empty;
+
+                    int prefixIndex = base64String.IndexOf(base64Prefix);
+                    if (prefixIndex >= 0)
+                    {
+                        base64Data = base64String.Substring(prefixIndex + base64Prefix.Length);
+                    }
+
+
+                    if (string.IsNullOrWhiteSpace(base64Data))
                     {
                         urls.Add("null");
                     }
+
+
                     // Decodificar el archivo Base64
-                    byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
+                    byte[] pdfBytes = Convert.FromBase64String(base64Data);
 
                     // Subir el archivo a Amazon S3
                     string key = $"{NumeroIdentificacion}/{file.NombreArchivo}.pdf";
