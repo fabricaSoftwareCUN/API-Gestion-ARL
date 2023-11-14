@@ -46,13 +46,19 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
                 foreach (var file in arlFiles)
                 {
                     // Validación de Base64
-                    if (!IsBase64String(file.ReferenciaArchivo))
+                    /*if (!IsBase64String(file.ReferenciaArchivo))
                     {
                         // Manejo de archivos no válidos
                         //Log.Warning($"Archivo no válido: {file.NombreArchivo}");
                         urls.Add("null");
                         continue; // Salta este archivo y continúa con el siguiente.
+                    }*/
+                    if(string.IsNullOrWhiteSpace(file.ReferenciaArchivo))
+                    {
+                        urls.Add("null");
                     }
+
+
 
                     // Decodificar el archivo Base64
                     byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
