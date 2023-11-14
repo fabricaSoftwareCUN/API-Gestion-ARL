@@ -1,6 +1,7 @@
 ﻿using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using API_ARLRequest.Application.DTOs;
 using API_ARLRequest.Domain;
@@ -21,10 +22,10 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
         public AmazonS3(ApplicationDbContext dbContext)
         {
-            this._accessKey = "AKIAW7YBK325DVJBMBHI";
-            this._secretKey = "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";
+            this._accessKey = "AKIAV4V7LD4RPURCK5FM";
+            this._secretKey = "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";
             this._config = new AmazonS3Config { RegionEndpoint = RegionEndpoint.USEast1 };
-            this._bucketName = "cun-test-arl-request";
+            this._bucketName = "gestion-documental-arl";
             this.credentials = new BasicAWSCredentials(this._accessKey, this._secretKey);
             this._dbContext = dbContext;
         }
@@ -45,21 +46,10 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
                 foreach (var file in arlFiles)
                 {
-                    // Validación de Base64
-                    /*if (!IsBase64String(file.ReferenciaArchivo))
-                    {
-                        // Manejo de archivos no válidos
-                        //Log.Warning($"Archivo no válido: {file.NombreArchivo}");
-                        urls.Add("null");
-                        continue; // Salta este archivo y continúa con el siguiente.
-                    }*/
                     if(string.IsNullOrWhiteSpace(file.ReferenciaArchivo))
                     {
                         urls.Add("null");
                     }
-
-
-
                     // Decodificar el archivo Base64
                     byte[] pdfBytes = Convert.FromBase64String(file.ReferenciaArchivo);
 
@@ -72,9 +62,6 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
             }
             catch (Exception ex)
             {
-                // Manejo de errores: Registra o maneja la excepción según tus necesidades.
-                // También puedes agregar métricas o notificaciones aquí para monitorizar problemas.
-                //Log.Error(ex, "Error al subir archivos a Amazon S3");
                 throw new("Ha ocurrido un error inesperado: " + ex.Message); // Re-lanza la excepción si es necesario.
             }
 
@@ -96,31 +83,54 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
                 await fileTransferUtility.UploadAsync(fileTransferUtilityRequest);
 
-                return $"https://{_bucketName}.s3.amazonaws.com/{key}";
+                return GetUrl(client as AmazonS3Client, _bucketName, key);
             }
         }
 
-        private bool IsBase64String(string s)
+        private async Task<Dictionary<string, string>> GetFilesWithTokensAsync(IAmazonS3 s3Client, string bucketName, string folderName)
         {
-            // Validación simple para verificar si una cadena es Base64 válida
-            if (string.IsNullOrWhiteSpace(s) || s.Length % 4 != 0)
+            var prefix = folderName.EndsWith("/") ? folderName : folderName + "/";
+
+            ListObjectsV2Request request = new ListObjectsV2Request
             {
-                return false;
-            }
+                BucketName = bucketName,
+                Prefix = prefix
+            };
+
+            ListObjectsV2Response response;
             try
             {
-                Convert.FromBase64String(s);
-                return true;
+                response = await s3Client.ListObjectsV2Async(request);
             }
-            catch
+            catch (AmazonS3Exception e)
             {
-                return false;
+                Console.WriteLine("Error al listar objetos: " + e.Message);
+                return null;
             }
 
+            var filesWithTokens = new Dictionary<string, string>();
 
+            foreach (var s3Object in response.S3Objects)
+            {
+                string objectKey = s3Object.Key;
+                string tokenLink = GetUrl(s3Client as AmazonS3Client, bucketName, objectKey); // Genera el enlace con token
 
+                filesWithTokens.Add(objectKey, tokenLink);
+            }
+
+            return filesWithTokens;
         }
+        private string GetUrl(AmazonS3Client client, string bucketName, string objectKey, int durationInMinutes = 120)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = objectKey,
+                Expires = DateTime.Now.AddMinutes(durationInMinutes)
+            };
 
+            return client.GetPreSignedURL(request);
+        }
 
 
     }
