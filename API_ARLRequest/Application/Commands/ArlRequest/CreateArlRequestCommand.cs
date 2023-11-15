@@ -16,7 +16,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string ProgramaAcademico,
         string TipoPractica,
         string NombreEmprendimiento,
-        string NitEmprendimiento,
+        long NitEmprendimiento,
         string FechaNacimiento,
         string EpsEstudiante,
         long NumeroTelEstudiante,
