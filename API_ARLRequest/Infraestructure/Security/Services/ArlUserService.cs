@@ -86,7 +86,7 @@ namespace API_ARLRequest.Infraestructure.Security.Services
 
         public async Task<UserDTO> UpdateUserAsync(UpdateUserDto updateUserDto)
         {
-            var user = await _context.Users.FindAsync(updateUserDto.IdUser);
+            var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == updateUserDto.Email);
 
             if (user == null)
             {

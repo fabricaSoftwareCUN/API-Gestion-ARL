@@ -78,7 +78,7 @@ namespace API_ARLRequest.Infraestructure.Security.Controllers
             {
                 if (updateUserDto == null)
                 {
-                    return NotFound(new { Status = false, Code = HttpStatusCode.NotFound, Messagge = $"Usuario no encontrado con ID {updateUserDto.IdUser}" });
+                    return NotFound(new { Status = false, Code = HttpStatusCode.NotFound, Messagge = $"Usuario no encontrado con Email {updateUserDto.Email}" });
                 }
 
                 var updatedUser = await _arlUserService.UpdateUserAsync(updateUserDto);
