@@ -43,7 +43,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
             var arlRequest = new Domain.ArlRequest()
             {
-                NumeroIdentificacion = request.NumeroIdentificacion.ToString(),
+                NumeroIdentificacion = request.NumeroIdentificacion != 0 ? request.NumeroIdentificacion.ToString() : throw new("Número de identificación inválido."),
                 TipoIdentificacion = request.TipoIdentificacion,
                 NombreEstudiante = request.NombreEstudiante,
                 EmailEstudiante = request.EmailEstudiante,
@@ -53,13 +53,13 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ProgramaAcademico = request.ProgramaAcademico,
                 TipoPractica = request.TipoPractica,
                 NombreEmprendimiento = request.NombreEmprendimiento,
-                NitEmprendimiento = request.NitEmprendimiento.ToString(),
+                NitEmprendimiento = request.NitEmprendimiento != 0 ? request.NitEmprendimiento.ToString() : "N/A",
                 FechaNacimiento = request.FechaNacimiento,
                 EpsEstudiante = request.EpsEstudiante,
-                NumeroTelEstudiante = request.NumeroTelEstudiante.ToString(),
+                NumeroTelEstudiante = request.NumeroTelEstudiante != 0 ? request.NumeroTelEstudiante.ToString() : "N/A",
                 CorreoInstitucional = request.CorreoInstitucional,
                 NombreEmpresaPracticas = request.NombreEmpresaPracticas,
-                NitEmpresaPracticas = request.NitEmpresaPracticas.ToString(),
+                NitEmpresaPracticas = request.NitEmpresaPracticas != 0 ? request.NitEmpresaPracticas.ToString() : "N/A",
                 RiesgoEstudiante = request.RiesgoEstudiante,
                 NombrePersonaACargoPractica = request.NombrePersonaACargoPractica,
                 TelefonoPersonasACargo = request.TelefonoPersonasACargo.ToString(),
