@@ -22,7 +22,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
         public async Task<ArlRequestDto> Handle(CreateArlRequestCommand request, CancellationToken cancellationToken)
         {
             var existingPendingRequest = await _dbContext.ArlRequests
-                .FirstOrDefaultAsync(a => a.NumeroIdentificacion == request.NumeroIdentificacion && a.EstadoSolicitud == "Pendiente");
+                .FirstOrDefaultAsync(a => a.NumeroIdentificacion == request.NumeroIdentificacion.ToString() && a.EstadoSolicitud == "Pendiente");
 
             if (existingPendingRequest != null)
             {
@@ -34,7 +34,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
             if (request.Archivos != null && request.Archivos.Count > 0)
             {
-                urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion);
+                urls = await _amazonS3.UploadFilesToS3Async(request.Archivos, request.NumeroIdentificacion.ToString());
             }
 
 
@@ -43,7 +43,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
             var arlRequest = new Domain.ArlRequest()
             {
-                NumeroIdentificacion = request.NumeroIdentificacion,
+                NumeroIdentificacion = request.NumeroIdentificacion.ToString(),
                 TipoIdentificacion = request.TipoIdentificacion,
                 NombreEstudiante = request.NombreEstudiante,
                 EmailEstudiante = request.EmailEstudiante,
@@ -56,13 +56,13 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 NitEmprendimiento = request.NitEmprendimiento,
                 FechaNacimiento = request.FechaNacimiento,
                 EpsEstudiante = request.EpsEstudiante,
-                NumeroTelEstudiante = request.NumeroTelEstudiante,
+                NumeroTelEstudiante = request.NumeroTelEstudiante.ToString(),
                 CorreoInstitucional = request.CorreoInstitucional,
                 NombreEmpresaPracticas = request.NombreEmpresaPracticas,
-                NitEmpresaPracticas = request.NitEmpresaPracticas,
+                NitEmpresaPracticas = request.NitEmpresaPracticas.ToString(),
                 RiesgoEstudiante = request.RiesgoEstudiante,
                 NombrePersonaACargoPractica = request.NombrePersonaACargoPractica,
-                TelefonoPersonasACargo = request.TelefonoPersonasACargo,
+                TelefonoPersonasACargo = request.TelefonoPersonasACargo.ToString(),
                 EmailPersonaACargoPractica = request.EmailPersonaACargoPractica,
                 FechaInicioPractica = request.FechaInicioPractica,
                 FechaTerminacionPractica = request.FechaTerminacionPractica,

@@ -6,7 +6,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
 {
     public record CreateArlRequestCommand
         (
-        string NumeroIdentificacion,
+        long NumeroIdentificacion,
         string TipoIdentificacion,
         string NombreEstudiante,
         string EmailEstudiante,
@@ -19,13 +19,13 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string NitEmprendimiento,
         string FechaNacimiento,
         string EpsEstudiante,
-        string NumeroTelEstudiante,
+        long NumeroTelEstudiante,
         string CorreoInstitucional,
         string NombreEmpresaPracticas,
-        string NitEmpresaPracticas,
+        long NitEmpresaPracticas,
         string RiesgoEstudiante,
         string NombrePersonaACargoPractica,
-        string TelefonoPersonasACargo,
+        long TelefonoPersonasACargo,
         string EmailPersonaACargoPractica,
         string FechaInicioPractica,
         string FechaTerminacionPractica,
