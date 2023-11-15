@@ -55,8 +55,10 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
                     {
                         base64Data = base64String.Substring(prefixIndex + base64Prefix.Length);
                     }
-
-
+                    if (prefixIndex < 0)
+                    {
+                        base64Data = base64String;
+                    }
                     if (string.IsNullOrWhiteSpace(base64Data))
                     {
                         urls.Add("null");
@@ -68,7 +70,7 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
 
                     // Subir el archivo a Amazon S3
                     string key = $"{NumeroIdentificacion}/{file.NombreArchivo}.pdf";
-                    string url = await UploadFileToS3Async(client, pdfBytes, key);
+                    string url = await UploadFileToS3Async(client, pdfBytes, key, NumeroIdentificacion);
 
                     urls.Add(url);
                 }
@@ -81,7 +83,7 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
             return urls;
         }
 
-        private async Task<string> UploadFileToS3Async(IAmazonS3 client, byte[] fileData, string key)
+        private async Task<string> UploadFileToS3Async(IAmazonS3 client, byte[] fileData, string key, string folder)
         {
             using (MemoryStream memoryStream = new MemoryStream(fileData))
             {
