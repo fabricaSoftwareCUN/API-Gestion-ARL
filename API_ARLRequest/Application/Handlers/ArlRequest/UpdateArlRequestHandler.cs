@@ -1,6 +1,9 @@
 ﻿using API_ARLRequest.Application.Commands.ArlRequest;
 using API_ARLRequest.Application.DTOs;
 using API_ARLRequest.Infraestructure.Data;
+using API_ARLRequest.Infraestructure.Services.EmailServiceSMTP.DTOs;
+using API_ARLRequest.Infraestructure.Services.EmailServiceSMTP.Services;
+using API_ARLRequest.Infraestructure.Services.EmailServiceSMTP.Templates;
 using MediatR;
 
 namespace API_ARLRequest.Application.Handlers.ArlRequest
@@ -8,9 +11,13 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
     public class UpdateArlRequestHandler : IRequestHandler<UpdateArlRequestCommand, ArlRequestDto>
     {
         private readonly ApplicationDbContext _dbContext;
-        public UpdateArlRequestHandler(ApplicationDbContext context)
+        private readonly ISendEmailService _sendEmailService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+        public UpdateArlRequestHandler(ApplicationDbContext context, ISendEmailService sendEmailService, IWebHostEnvironment hostingEnvironment)
         {
             _dbContext = context;
+            _sendEmailService = sendEmailService;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task<ArlRequestDto> Handle(UpdateArlRequestCommand request, CancellationToken cancellationToken)
         {
@@ -22,14 +29,10 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
             {
                 throw new InvalidOperationException("No es una solicitud valida para resolver.");
             }
-            if (arlRequest.EstadoSolicitud == "APROBADA" || arlRequest.EstadoSolicitud == "RECHAZADA")
+            /*if (arlRequest.EstadoSolicitud == "APROBADA" || arlRequest.EstadoSolicitud == "RECHAZADA")
             {
                 throw new InvalidOperationException("La solicitud ya ha sido resuelta, no es posible modificar su estado.");
-            }
-            /*if (arlRequest.EstadoSolicitud == "PENDIENTE")
-            {
-                throw new InvalidOperationException("Debes cambiar el estado de solicitud a RECHAZADA o APROBADA.");
-            }*/
+            }*/           
 
             DateTime dateTime = DateTime.Now;
             var fechaFormateada = dateTime.ToString();
@@ -42,6 +45,92 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
 
 
             await _dbContext.SaveChangesAsync(cancellationToken);
+
+
+            // Logica para enviar Email
+            /*try
+            {
+                var name = arlRequest.NombreEstudiante;
+                var reason = arlRequest.MotivoAprobacion;
+
+                string rutaBasePro = AppContext.BaseDirectory;
+                string rutaBase = _hostingEnvironment.ContentRootPath;
+                string templatePath = Path.Combine(rutaBasePro, "API_ARLRequest", "Infraestructure", "Services", "EmailServiceSMTP", "Templates");
+                string template = "";
+
+                switch (reason)
+                {
+                    case "ARL APROBADA":
+                        templatePath = "ArlAprobada.html";
+                        break;
+                    case "ACTA DE INICIO MAL DILIGENCIADA":
+                        template = "ActaInicioMalDiligenciada.html";
+                        break;
+                    case "PROBLEMAS DOCUMENTOS SOPORTES":
+                        templatePath = "ProblemasDocumentos.html";
+                        break;
+                    case "EMPRESA ASUME ARL":
+                        templatePath = "EmpresaAsumeARL.html";
+                        break;
+                    case "DURACIÓN DE LAS PRÁCTICAS":
+                        templatePath = "DuracionPracticas.html";
+                        break;
+                    case "NO APROBADO POR CUN":
+                        templatePath = "NoAprobadoCUN.html";
+                        break;
+                    default:
+                        templatePath = "NoAprobadoCUN.html";
+                        break;
+                }
+
+                string rutaCompleta = Path.Combine(templatePath, template);
+
+                var templateContent = File.ReadAllText(rutaCompleta);
+                templateContent = templateContent.Replace("{{Nombre}}", name);
+
+
+                var sendEmail = new SendEmailDTO()
+                {
+                    To = arlRequest.EmailEstudiante,
+                    Subject = reason,
+                    Body = templateContent
+                };
+                _sendEmailService.SendEmail(sendEmail);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("El correo no se envio." + ex); ;
+            }
+            */
+
+
+            try
+            {
+                var nombre = arlRequest.NombreEstudiante; // Aquí obtienes dinámicamente el nombre
+
+                var emailTemplateService = new EmailTemplates();
+
+                string template = arlRequest.MotivoAprobacion;
+
+                string templateAprobada = emailTemplateService.GetTemplate(template);
+
+
+                //var templateContent = File.ReadAllText(templateAprobada);
+                templateAprobada = templateAprobada.Replace("{{Nombre}}", nombre);
+
+                var sendEmail = new SendEmailDTO()
+                {
+                    To = arlRequest.EmailEstudiante,
+                    Subject = "Resolución Solicitud ARL",
+                    Body = templateAprobada
+                };
+                _sendEmailService.SendEmail(sendEmail);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("Ha ocurrido un error al enviar el email." + ex.Message); ;
+            }
+
 
             return new ArlRequestDto
             {

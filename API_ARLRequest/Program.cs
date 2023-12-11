@@ -5,10 +5,12 @@ using MediatR;
 using System.Reflection;
 using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
 using API_ARLRequest.Infraestructure.Security.Services;
+using API_ARLRequest.Infraestructure.Services.EmailServiceSMTP.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ArlUserService>();
+builder.Services.AddScoped<ISendEmailService, SendEmailService>();
 builder.Services.AddTransient<AmazonS3>();
 
 // Configurar JWT

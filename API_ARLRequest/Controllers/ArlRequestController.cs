@@ -1,4 +1,5 @@
-﻿using API_ARLRequest.Application.Commands.ArlRequest;
+﻿using Amazon.S3;
+using API_ARLRequest.Application.Commands.ArlRequest;
 using API_ARLRequest.Application.DTOs;
 using API_ARLRequest.Application.Queries.ArlRequest;
 using API_ARLRequest.Domain;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using System.Net;
+using System.Text.Json;
 
 namespace API_ARLRequest.Controllers
 {
@@ -72,6 +74,7 @@ namespace API_ARLRequest.Controllers
         #endregion
 
         #region PostCommands
+
         [HttpPost]
         public async Task<IActionResult> CreateArlRequest([FromBody] CreateArlRequestCommand command)
         {
@@ -95,6 +98,10 @@ namespace API_ARLRequest.Controllers
                 // Manejo de excepción de serialización JSON
                 //Console.WriteLine("Error de serialización JSON: " + ex.Message);
                 return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message, Response = "Error de Serializacion?" });
+            }
+            catch (JsonException ex)
+            {
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = "Error al procesar la solicitud: Problema con el formato de los datos JSON. Detalles: " + ex.Message });
             }
             catch (Exception ex)
             {

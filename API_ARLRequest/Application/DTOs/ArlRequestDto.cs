@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace API_ARLRequest.Application.DTOs
 {
     public class ArlRequestDto
-    {
+    { 
+        
         public int IdSolicitudArl { get; set; }       
         public string NumeroIdentificacion { get; set; }
         public string TipoIdentificacion { get; set; }
@@ -48,6 +50,8 @@ namespace API_ARLRequest.Application.DTOs
         public string FechaRespuestaSolicitud { get; set; }
 
         public List<ArlFileDto> Archivos { get; set; }
+
+      
 
     }
 }
