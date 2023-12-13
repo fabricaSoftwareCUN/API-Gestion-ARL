@@ -25,7 +25,7 @@ namespace API_ARLRequest.Application.Commands.ArlRequest
         string NitEmpresaPracticas,
         string RiesgoEstudiante,
         string NombrePersonaACargoPractica,
-        long TelefonoPersonasACargo,
+		string TelefonoPersonasACargo,
         string EmailPersonaACargoPractica,
         string FechaInicioPractica,
         string FechaTerminacionPractica,

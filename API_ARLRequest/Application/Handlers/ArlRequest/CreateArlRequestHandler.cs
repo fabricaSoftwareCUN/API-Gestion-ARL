@@ -74,7 +74,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 //NitEmpresaPracticas = request.NitEmpresaPracticas != 0 ? request.NitEmpresaPracticas.ToString() : "N/A",
                 RiesgoEstudiante = request.RiesgoEstudiante,
                 NombrePersonaACargoPractica = request.NombrePersonaACargoPractica,
-                TelefonoPersonasACargo = request.TelefonoPersonasACargo.ToString(),
+                TelefonoPersonasACargo = request.TelefonoPersonasACargo,
                 EmailPersonaACargoPractica = request.EmailPersonaACargoPractica,
                 FechaInicioPractica = request.FechaInicioPractica,
                 FechaTerminacionPractica = request.FechaTerminacionPractica,
