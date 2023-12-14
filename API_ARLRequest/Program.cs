@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Desarrollo")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Produccion")));
 
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ArlUserService>();
@@ -72,12 +72,14 @@ using (var scope = app.Services.CreateScope())
     var mediator = services.GetRequiredService<IMediator>();
 }*/
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
-}
+
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var context = services.GetRequiredService<ApplicationDbContext>();
+//    context.Database.Migrate();
+//}
 
 
 
