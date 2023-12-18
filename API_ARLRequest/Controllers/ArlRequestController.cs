@@ -1,18 +1,22 @@
-﻿using API_ARLRequest.Application.Commands.ArlRequest;
+﻿using Amazon.S3;
+using API_ARLRequest.Application.Commands.ArlRequest;
 using API_ARLRequest.Application.DTOs;
 using API_ARLRequest.Application.Queries.ArlRequest;
 using API_ARLRequest.Domain;
 using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.Design;
 using System.Net;
+using System.Text.Json;
 
 namespace API_ARLRequest.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class ArlRequestController : ControllerBase
@@ -28,6 +32,7 @@ namespace API_ARLRequest.Controllers
 
         #region GetCommands
 
+        
         [HttpGet]
         public async Task<IActionResult> GetAllArlRequests()
         {
@@ -41,6 +46,7 @@ namespace API_ARLRequest.Controllers
 
         }
 
+        //[Authorize(Policy = "Admin")]
         [HttpGet("Id/{IdSolicitudArl}")]
         public async Task<IActionResult> GetArlRequestById(int IdSolicitudArl)
         {
@@ -53,6 +59,7 @@ namespace API_ARLRequest.Controllers
             return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequest });
         }
 
+        //[Authorize(Roles = "Admin, User")]
         [HttpGet("Dni/{NumeroIdentificacion}")]
         public async Task<IActionResult> GetArlRequestByDni(string NumeroIdentificacion)
         {
@@ -67,8 +74,9 @@ namespace API_ARLRequest.Controllers
         #endregion
 
         #region PostCommands
+
         [HttpPost]
-        public async Task<IActionResult> CreateArlRequest(CreateArlRequestCommand command)
+        public async Task<IActionResult> CreateArlRequest([FromBody] CreateArlRequestCommand command)
         {
 
             try
@@ -79,14 +87,28 @@ namespace API_ARLRequest.Controllers
                 //var urls = await _amazonS3.UploadFilesToS3Async(command.Archivos, arlRequest.NumeroIdentificacion);
 
 
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value});
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, Message = "La solicitud de ARL se ha enviado exitosamente. ", arlRequest = action.Value });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message });
+            }
+            catch (NotSupportedException ex)
+            {
+                // Manejo de excepción de serialización JSON
+                //Console.WriteLine("Error de serialización JSON: " + ex.Message);
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message, Response = "Error de Serializacion?" });
+            }
+            catch (JsonException ex)
+            {
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = "Error al procesar la solicitud: Problema con el formato de los datos JSON. Detalles: " + ex.Message });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Status = true, Code = HttpStatusCode.BadRequest, Message = ex.Message });
+                return BadRequest(new { Status = false, Code = HttpStatusCode.BadRequest, Message = ex.Message, Response = "Error al recibir los datos." });
             }
 
-            
+
         }
 
         #endregion
@@ -98,12 +120,12 @@ namespace API_ARLRequest.Controllers
         {
             try
             {
-                var arlRequest = await _mediator.Send(command);
-                if (arlRequest == null)
+                var arlRequests = await _mediator.Send(command);
+                if (arlRequests == null)
                 {
                     return NotFound(new { Status = false, Code = HttpStatusCode.NotFound, Messagge = $"No se encontró ninguna solicitud de ARL con ID {command.IdSolicitudArl}." });
                 }
-                return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequest });
+                return Ok(new { Status = true, Code = HttpStatusCode.OK, arlRequests });
             }
             catch (Exception ex)
             {

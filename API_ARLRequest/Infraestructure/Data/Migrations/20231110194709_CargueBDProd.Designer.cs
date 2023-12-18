@@ -3,6 +3,7 @@ using API_ARLRequest.Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_ARLRequest.Infraestructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231110194709_CargueBDProd")]
+    partial class CargueBDProd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +56,13 @@ namespace API_ARLRequest.Infraestructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdSolicitudArl"));
 
+                    b.Property<string>("Aprobo")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CapaOcho")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CorreoInstitucional")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("EmailEstudiante")
@@ -95,9 +104,6 @@ namespace API_ARLRequest.Infraestructure.Data.Migrations
                     b.Property<string>("MotivoAprobacion")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Municipio")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NitEmprendimiento")
                         .HasColumnType("nvarchar(max)");
 
@@ -134,7 +140,13 @@ namespace API_ARLRequest.Infraestructure.Data.Migrations
                     b.Property<string>("Regional")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TelefonoPersonasAcargoPractica")
+                    b.Property<string>("RiesgoEstudiante")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Seleccion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TelefonoPersonasACargo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoIdentificacion")

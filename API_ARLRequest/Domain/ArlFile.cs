@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace API_ARLRequest.Domain
 {
@@ -8,11 +9,18 @@ namespace API_ARLRequest.Domain
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdDocumentoARL { get; set; }
-        public string NombreArchivo { get; set; }
-        public string ReferenciaArchivo { get; set; }
+        public string? NombreArchivo { get; set; }
+        public string? ReferenciaArchivo { get; set; }
 
         // Clave externa (FK) para relacionar archivos con estudiantes
+        //[ForeignKey("IdSolicitudArl")]
+        [JsonIgnore]
+        public ArlRequest? arlRequest { get; set; }
+        [ForeignKey("arlRequest")]
         public int IdSolicitudArl { get; set; }
-        public ArlRequest arlRequest { get; set; }
+
+        //[JsonIgnore]
+        //public ArlRequest? arlRequest { get; set; }
+        
     }
 }

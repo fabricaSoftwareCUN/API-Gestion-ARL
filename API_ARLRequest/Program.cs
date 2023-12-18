@@ -4,6 +4,13 @@ using Microsoft.Extensions.Hosting;
 using MediatR;
 using System.Reflection;
 using API_ARLRequest.Infraestructure.AWS.AmazonS3.Services;
+using API_ARLRequest.Infraestructure.Security.Services;
+using API_ARLRequest.Infraestructure.Services.EmailServiceSMTP.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Security.Claims;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,10 +25,44 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Coliseo")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Produccion")));
 
-
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<ArlUserService>();
+builder.Services.AddScoped<ISendEmailService, SendEmailService>();
 builder.Services.AddTransient<AmazonS3>();
+
+// Configurar JWT
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+// Configurar politicas de Autorizacion
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy
+    .RequireClaim(ClaimTypes.Role, "Admin")
+    );
+});
+
+// Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("NuevaPolitica", app =>
+    {
+        app.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 /*
@@ -31,12 +72,14 @@ using (var scope = app.Services.CreateScope())
     var mediator = services.GetRequiredService<IMediator>();
 }*/
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    context.Database.Migrate();
-}
+
+
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    var context = services.GetRequiredService<ApplicationDbContext>();
+//    context.Database.Migrate();
+//}
 
 
 
@@ -47,7 +90,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("NuevaPolitica");
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
