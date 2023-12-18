@@ -64,7 +64,7 @@ namespace API_ARLRequest.Application.Handlers.ArlRequest
                 ProgramaAcademico = request.ProgramaAcademico,
                 TipoPractica = request.TipoPractica,
                 NombreEmprendimiento = request.NombreEmprendimiento,
-                NitEmprendimiento = request.NitEmprendimiento,
+                NitEmprendimiento = request.NitEmprendimiento != 0 ? request.NitEmprendimiento.ToString() : "N/A",
                 FechaNacimiento = request.FechaNacimiento,
                 EpsEstudiante = request.EpsEstudiante,
                 NumeroTelEstudiante = request.NumeroTelEstudiante.ToString(),

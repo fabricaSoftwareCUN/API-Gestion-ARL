@@ -339,26 +339,40 @@ namespace API_ARLRequest.Infraestructure.AWS.AmazonS3.Services
             return client.GetPreSignedURL(request);
         }
 
-        private bool IsBase64String(string s)
+        private async Task<Dictionary<string, string>> GetFilesWithTokensAsync(IAmazonS3 s3Client, string bucketName, string folderName)
         {
-            // Validación simple para verificar si una cadena es Base64 válida
-            if (string.IsNullOrWhiteSpace(s) || s.Length % 4 != 0)
+            var prefix = folderName.EndsWith("/") ? folderName : folderName + "/";
+
+            ListObjectsV2Request request = new ListObjectsV2Request
             {
-                return false;
-            }
+                BucketName = bucketName,
+                Prefix = prefix
+            };
+
+            ListObjectsV2Response response;
             try
             {
-                Convert.FromBase64String(s);
-                return true;
+                response = await s3Client.ListObjectsV2Async(request);
             }
-            catch
+            catch (AmazonS3Exception e)
             {
-                return false;
+                Console.WriteLine("Error al listar objetos: " + e.Message);
+                return null;
             }
         }
     }
 }
+        private string GetUrl(AmazonS3Client client, string bucketName, string objectKey, int durationInMinutes = 120)
+        {
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = bucketName,
+                Key = objectKey,
+                Expires = DateTime.Now.AddMinutes(durationInMinutes)
+            };
 
+            return client.GetPreSignedURL(request);
+        }
 
 
 */
